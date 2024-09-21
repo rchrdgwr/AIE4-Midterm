@@ -94,11 +94,12 @@ async def main(message):
     # Call the LLM with the formatted prompt
     # response = llm.invoke(formatted_prompt)
     # 
+    MAX_PREVIEW_LENGTH = 100
+
     response = retrieval_augmented_qa_chain.invoke({"question" : message.content })
     answer_content = response["response"].content
     msg = cl.Message(content="")    
-    # print(response["response"].content)
-    # print(f"Number of found context: {len(response['context'])}")
+
     for i in range(0, len(answer_content), 50):  # Adjust chunk size (e.g., 50 characters)
         chunk = answer_content[i:i+50]
         await msg.stream_token(chunk)
@@ -109,4 +110,23 @@ async def main(message):
     context_documents = response["context"]
     num_contexts = len(context_documents)
     context_msg = f"Number of found context: {num_contexts}"
+
+
     await cl.Message(content=context_msg).send()
+
+    for doc in context_documents:
+        document_title = doc.metadata.get("source", "Unknown Document") 
+        document_id = doc.metadata.get("document_id", "Unknown ID") 
+        chunk_number = doc.metadata.get("chunk_number", "Unknown Chunk")  
+
+        document_context = doc.page_content.strip() 
+        truncated_context = document_context[:MAX_PREVIEW_LENGTH] + ("..." if len(document_context) > MAX_PREVIEW_LENGTH else "")
+        print("----------------------------------------")
+        print(truncated_context)
+
+        await cl.Message(
+            content=f"**{document_title} ( Chunk: {chunk_number})**",
+            elements=[
+                cl.Text(content=truncated_context, display="inline")  
+            ]
+        ).send()
