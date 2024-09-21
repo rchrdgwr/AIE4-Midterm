@@ -8,7 +8,12 @@ from langchain_core.prompts import ChatPromptTemplate
 from operator import itemgetter
 from langchain.schema.output_parser import StrOutputParser
 from langchain.schema.runnable import RunnablePassthrough
+from classes.app_state import AppState
 
+document_urls = [
+    "https://www.whitehouse.gov/wp-content/uploads/2022/10/Blueprint-for-an-AI-Bill-of-Rights.pdf",
+     "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+]
 
 # Load environment variables from .env file
 load_dotenv()
@@ -16,14 +21,26 @@ load_dotenv()
 # Get the OpenAI API key from environment variables
 openai_api_key = os.getenv("OPENAI_API_KEY")
 
+# Setup our state
+state = AppState()
+state.set_document_urls(document_urls)
+state.set_llm_model("gpt-3.5-turbo")
+state.set_embedding_model("text-embedding-3-small")
+
+
 # Initialize the OpenAI LLM using LangChain
-llm = ChatOpenAI(model="gpt-3.5-turbo", openai_api_key=openai_api_key)
-qdrant_retriever = create_vector_store()
+llm = ChatOpenAI(model=state.llm_model, openai_api_key=openai_api_key)
+
+
+
+
+qdrant_retriever = create_vector_store(state)
 
 system_template = """
     You are an expert at explaining technical documents to people.
     You are provided context below to answer the question.
     Only use the information provided below.
+    If they do not ask a question, have a conversation with them and ask them if they have any questions
     If you cannot answer the question with the content below say 'I don't have enough information, sorry'
     The two documents are 'Blueprint for an AI Bill of Rights' and 'Artificial Intelligence Risk Management Framework: Generative Artificial Intelligence Profile'
 """
