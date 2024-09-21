@@ -1,6 +1,6 @@
 class AppState:
     def __init__(self):
-        self.debug = True
+        self.debug = False
         self.llm_model = "gpt-3.5-turbo"
         self.embedding_model = "text-embedding-3-small"
         self.chunk_size = 1000
