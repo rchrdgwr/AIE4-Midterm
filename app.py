@@ -23,16 +23,18 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 
 # Setup our state
 state = AppState()
+state.set_debug(False)
+
 state.set_document_urls(document_urls)
+
 state.set_llm_model("gpt-3.5-turbo")
 state.set_embedding_model("text-embedding-3-small")
-
+state.set_chunk_size(1000)
+state.set_chunk_overlap(100)
 
 # Initialize the OpenAI LLM using LangChain
 llm = ChatOpenAI(model=state.llm_model, openai_api_key=openai_api_key)
-
-
-
+state.set_main_llm(llm)
 
 qdrant_retriever = create_vector_store(state)
 

@@ -13,6 +13,7 @@ class AppState:
         self.titles = []
         self.documents = []
         self.combined_document_objects = []
+        self.main_llm = None
         self.retriever = None
 
         self.system_template = "You are a helpful assistant"
@@ -56,6 +57,10 @@ class AppState:
         self.combined_document_objects = combined_document_objects
     def set_retriever(self, retriever):
         self.retriever = retriever
+    def set_main_llm(self, main_llm):
+        self.main_llm = main_llm
+    def set_debug(self, debug):
+        self.debug = debug
     #
     # Method to update the user input
     def set_user_input(self, input_text):

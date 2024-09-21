@@ -5,10 +5,11 @@ from langchain_community.vectorstores import Qdrant
 from langchain_openai.embeddings import OpenAIEmbeddings
 import fitz
 import io
-import tiktoken
-import requests
 import os
+import requests
+import tiktoken
 from utilities.debugger import dprint
+import uuid
 
 def tiktoken_len(text):
     tokens = tiktoken.encoding_for_model("gpt-4o").encode(
@@ -55,6 +56,7 @@ def get_documents(state):
             "title": title,
             "metadata": metadata,
             "single_text_document": single_text_document,
+            "document_id": str(uuid.uuid4())
         }
         state.add_document(document)
         dprint(state, f"Title of Document: {title}")
@@ -64,14 +66,7 @@ def get_documents(state):
 
 def create_chunked_documents(state):
     get_documents(state)
-    # file_path_1 = "data/Blueprint-for-an-AI-Bill-of-Rights.pdf"
-    # file_path_2 = "data/NIST.AI.600-1.pdf"
-    # loader = PyMuPDFLoader(file_path_1)
-    # documents_1 = loader.load()
-    # loader = PyMuPDFLoader(file_path_2)
-    # documents_2 = loader.load()
-    # print(f"Number of pages in 1: {len(documents_1)}")
-    # print(f"Number of pages in 2: {len(documents_2)}")
+
 
     
     text_splitter = RecursiveCharacterTextSplitter(
@@ -80,22 +75,42 @@ def create_chunked_documents(state):
         length_function = tiktoken_len,
     )
     combined_document_objects = []
-
     dprint(state, "Chunking documents and creating document objects")
     for document in state.documents:
         dprint(state, f"processing documend: {document['title']}")
         text = document["single_text_document"]
         dprint(state, text)
         title = document["title"]
+        document_id = document["document_id"]
         chunks_document = text_splitter.split_text(text)
         dprint(state, len(chunks_document))
-        document_objects = [Document(page_content=chunk, metadata={"source": title, "document_id": "doc1"}) for chunk in chunks_document]
-        dprint(state, f"Number of chunks for Document: {len(chunks_document)}")
-        combined_document_objects = combined_document_objects + document_objects
+
+        for chunk_number, chunk in enumerate(chunks_document, start=1):
+            document_objects = Document(
+                page_content=chunk,
+                metadata={
+                    "source": title,
+                    "document_id": document.get("document_id", "default_id"),
+                    "chunk_number": chunk_number  # Add unique chunk number
+                }
+            )
+            combined_document_objects.append(document_objects)
     state.add_combined_document_objects(combined_document_objects)
     
 
-def create_vector_store(state):
+def create_vector_store(state, **kwargs):
+    for key, value in kwargs.items():
+        if hasattr(state, key):
+            setattr(state, key, value)
+        else:
+            print(f"Warning: {key} is not an attribute of the state object")
+
+    # Rest of your create_vector_store logic
+    print(f"Chunk size after update: {state.chunk_size}")
+
+
+
+
     create_chunked_documents(state)
     embedding_model = OpenAIEmbeddings(model=state.embedding_model)
 
@@ -106,4 +121,5 @@ def create_vector_store(state):
     )
     qdrant_retriever = qdrant_vectorstore.as_retriever()
     state.set_retriever(qdrant_retriever)
+    print("Vector store created")
     return qdrant_retriever
