@@ -1,8 +1,9 @@
 numpy==1.26.4
 chainlit==0.7.700   # 1.1.402 
-openai==1.3.5
+openai>=1.26.0
 pymupdf==1.24.9
-qdrant-client==1.11.0
+pdfplumber==0.11.4
+qdrant-client==1.11.2
 langchain-text-splitters
 langchain-core==0.2.27 
 langchain-community==0.2.10

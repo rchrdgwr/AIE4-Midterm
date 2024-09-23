@@ -1,3 +1,5 @@
-# Welcome to Chat with Your Text File
+# Welcome to AI Mentor
 
-With this application, you can chat with an uploaded text file that is smaller than 2MB!
+This application allows you to ask questions about two AI documents:
+- Document 1
+- Document 2

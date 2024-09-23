@@ -47,7 +47,7 @@ show_readme_as_default = true
 default_collapse_content = true
 
 # The default value for the expand messages settings.
-default_expand_messages = false
+default_expand_messages = true
 
 # Hide the chain of thought details from the user in the UI.
 hide_cot = false
@@ -61,23 +61,21 @@ hide_cot = false
 custom_css = "/public/custom_styles.css"
 # Override default MUI light theme. (Check theme.ts)
 [UI.theme.light]
-    #background = "#FAFAFA"
-    #paper = "#FFFFFF"
+    background = "#E0F7FA"  # Light Cyan for a refreshing background
+    paper = "#FFFFFF"       # Keep the paper white for contrast
 
     [UI.theme.light.primary]
-        #main = "#F80061"
-        #dark = "#980039"
-        #light = "#FFE7EB"
-
-# Override default MUI dark theme. (Check theme.ts)
+        main = "#0288D1"     # A vibrant blue as the primary color
+        dark = "#01579B"     # A deeper blue for darker elements
+        light = "#B3E5FC"    # A light blue for accents and highlights
 [UI.theme.dark]
-    #background = "#FAFAFA"
-    #paper = "#FFFFFF"
+    background = "#1E3A5F"  # A deep, rich blue for the background
+    paper = "#2C3E50"       # Slightly lighter for paper elements
 
     [UI.theme.dark.primary]
-        #main = "#F80061"
-        #dark = "#980039"
-        #light = "#FFE7EB"
+        main = "#0288D1"     # Same vibrant blue for consistency
+        dark = "#01579B"     # A rich dark blue
+        light = "#4FC3F7"    # A lighter blue for accents
 
 
 [meta]

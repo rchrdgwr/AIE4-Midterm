@@ -1,0 +1,4 @@
+name: clean_llmops
+channels:
+  - defaults
+prefix: /home/rchrdgwr/anaconda3/envs/clean_llmops
