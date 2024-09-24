@@ -10,4 +10,4 @@ license: apache-2.0
 
 # AI Mentor - An Employees Guide to AI
 
-This 
+This  is
