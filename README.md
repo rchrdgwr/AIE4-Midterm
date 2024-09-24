@@ -1,26 +1,83 @@
-## Background and Context
+# AI Engineering Bootcamp Cohort 4 Midterm
 
-The CEO and corporate, with permission of the board, have assembled a crack data science and engineering team to take advantage of RAG, agents, and all of the latest open-source technologies emerging in the industry.  This time it's for real though.  This time, the company is aiming squarely at some Return On Investment - some ROI - on its research and development dollars.
+Richard Gower
+
+## Links
+
+[Chainlit Application (hosted on HuggingFace)](https://huggingface.co/spaces/rchrdgwr/AI4Midterm)
+
+[Fine Tuning the Snowflake Model (hosted on Colab)](https://colab.research.google.com/drive/1xAxfWy_3kYg2Arem85Oz-VBb2QkQmU_f)
+
+[Video of beta Chainlit App in action](https://www.loom.com/share/192df355aabc4bbc93912b6dee04ca57?sid=0f5dbdbb-26a1-41f2-8c2e-7a693c7165e0)
+
+The two documents:
+1. 2022: [Blueprint for an AI Bill of Rights: Making Automated Systems Work for the American People](https://www.whitehouse.gov/wp-content/uploads/2022/10/Blueprint-for-an-AI-Bill-of-Rights.pdf) (PDF)
+2. 2024: [National Institute of Standards and Technology (NIST) Artificial Intelligent Risk Management Framework](https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf) (PDF)
+
 
 ## The Problem
 
-**You are an AI Solutions Engineer**.  You've worked directly with internal stakeholders to identify a problem: `people are concerned about the implications of AI, and no one seems to understand the right way to think about building ethical and useful AI applications for enterprises.` 
+`people are concerned about the implications of AI, and no one seems to understand the right way to think about building ethical and useful AI applications for enterprises.` 
 
 This is a big problem and one that is rapidly changing.  Several people you interviewed said that *they could benefit from a chatbot that helped them understand how the AI industry is evolving, especially as it relates to politics.*  Many are interested due to the current election cycle, but others feel that some of the best guidance is likely to come from the government.
 
 ## Task 1: Dealing with the Data
 
-You identify the following important documents that, if used for context, you believe will help people understand what’s happening now:
+#### Review of the two PDFs
 
-1. 2022: [Blueprint for an AI Bill of Rights: Making Automated Systems Work for the American People](https://www.whitehouse.gov/wp-content/uploads/2022/10/Blueprint-for-an-AI-Bill-of-Rights.pdf) (PDF)
-2. 2024: [National Institute of Standards and Technology (NIST) Artificial Intelligent Risk Management Framework](https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf) (PDF)
+The two pdf documents contain text and tables.
 
-Your boss, the SVP of Technology, green-lighted this project to drive the adoption of AI throughout the enterprise.  It will be a nice showpiece for the upcoming conference and the big AI initiative announcement the CEO is planning.
+The AI Bill of Rights is 73 pages, mostly text with minimal tables, no images and a clear structural breakdown including sections etc. It outlines protections for individuals interacting with AI systems, emphasizing five key principles: 
+- Safe and effective systems
+- Algorithmic discrimination protections
+- Data privacy
+- Notice and explanation
+- Human alternatives to AI decisions
+ It aims to ensure fairness, transparency, and accountability in AI applications. The document serves as a guideline for organizations to manage AI responsibly and safeguard civil rights.
 
-<aside>
-📝
+The AI Risk Management Framework is 64 pages, mostly text, but with a lot of tables listing action ID, suggested action and the Generative AI risks.
 
-Task 1: Review the two PDFs and decide how best to chunk up the data with a single strategy to optimally answer the variety of questions you expect to receive from people.
+Possible questions about the AI Bill of Rights include:
+- What are the core principles of the AI Bill of Rights?
+- How does the document address issues of fairness and bias in AI systems?
+- What are the key protections for data privacy and security outlined in the blueprint?
+- How does the AI Bill of Rights aim to ensure transparency and explainability of AI systems?
+- What measures are recommended for ensuring that AI systems are safe and effective?
+- How does the blueprint propose to protect individuals from AI-driven surveillance?
+- What are the enforcement mechanisms for the protections outlined in the document?
+- How does the document address the rights of individuals when interacting with AI systems?
+- How is accountability for AI failures or misuse handled?
+- What role does the government play in implementing these AI protections?
+- What are the key principles of data privacy protections in the document?
+- What are the expected responsibilities for organizations using AI to prevent biased outcomes?
+- How does the document propose handling violations of civil rights in AI-driven systems?
+
+Possible questions about the AI Risk Management Framework include:
+- What are the key risks associated with generative AI, according to the NIST framework?
+- How does the framework suggest managing risks related to confabulations or AI "hallucinations"?
+- What are the environmental impacts of training generative AI systems?
+- How does the framework address data privacy concerns in AI?
+- What guidelines does NIST provide for ensuring information security in generative AI systems?
+- What strategies are recommended for mitigating harmful bias in AI models?
+- How does the framework address the risks of AI-generated content related to copyright and intellectual property?
+- What are the suggested actions for organizations to manage the risks posed by generative AI models?
+- How does NIST propose addressing malicious use cases of generative AI, such as the creation of harmful content?
+- What are the best practices for decommissioning AI systems, as per the framework?
+
+### Chunking strategy
+
+There are anumber of approaches to chunking the document:
+- In all cases we need to consider that there are 2 documents - so when fine tuning we want to ensure that there are representative pages from each document for performing training, evaluation, and testing
+- Since the documents are pdf, we need to ensure that the process to import them does not leave the documents split by pages (although that could be considered the simplest of chunking strategies if a really poor one since context typically is spread across pages)
+- Since the documents are text rich, the most straight forward chunking strategy would be to break up the text based on characters or tokens and have a reasonable overlap. Chunk sizes of 500-1000 are typically recommended due to the size of the context windows. For this project I have chosen a chunk size of 1000 with an overlap of 100
+- The project has been set up to easily test different chunk sizes. Initial tests that I run indicated a chunk size of 100 was poorly performing. A later phase would do a more detailed analysis of the chunk sizes to determine the optimum size for these documents
+
+Alternative chunking strategies to be investigated include:
+- Table aware - use an extraction technique that takes into account text data stored in tables
+- Section aware - use an extraction technique that takes into account the structure of the document based on the assumption that text within a section is more likely to be related than text between sections
+- Semantic 
+
+ and decide how best to chunk up the data with a single strategy to optimally answer the variety of questions you expect to receive from people.
 
 *Hint: Create a list of potential questions that people are likely to ask!*
 
