@@ -8,6 +8,4 @@ pinned: false
 license: apache-2.0
 ---
 
-# AI Mentor - An Employees Guide to AI
-
-This  is
+Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
