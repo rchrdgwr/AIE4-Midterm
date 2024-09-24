@@ -31,7 +31,7 @@ def create_vector_store(app_state, model_run_state, **kwargs):
         embedding=model_run_state.embedding_model,
         location=":memory:" 
     )
-    qdrant_retriever = qdrant_vectorstore.as_retriever()
+    qdrant_retriever = qdrant_vectorstore.as_retriever(search_kwargs={"k":app_state.num_retrievals})
     model_run_state.retriever = qdrant_retriever
     print("Vector store created")
 

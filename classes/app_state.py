@@ -5,6 +5,8 @@ class AppState:
         self.document_urls = []
         self.download_folder = "data/"
         self.documents = []
+        self.num_retrievals = 10
+
 
     def display(self):
         pprint.pprint(self.__dict__)
