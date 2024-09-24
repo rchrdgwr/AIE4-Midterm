@@ -38,9 +38,10 @@ chainlit_state.qa_model_name = "gpt-4o-mini"
 chainlit_state.qa_model = ChatOpenAI(model=chainlit_state.qa_model_name, openai_api_key=openai_api_key)
 
 hf_username = "rchrdgwr"
-hf_repo_name = "finetuned-arctic-model"
+hf_repo_name = "finetuned-arctic-model-2"
+finetuned_model_name = f"{hf_username}/{hf_repo_name}"
 
-chainlit_state.embedding_model_name = f"{hf_username}/{hf_repo_name}"
+chainlit_state.embedding_model_name = finetuned_model_name
 chainlit_state.embedding_model = HuggingFaceEmbeddings(model_name=chainlit_state.embedding_model_name)
 
 chainlit_state.chunk_size = 1000
@@ -54,8 +55,6 @@ chat_prompt = get_qa_prompt()
 retrieval_augmented_qa_chain = (
     {"context": itemgetter("question") | chainlit_state.retriever, "question": itemgetter("question")}
     | RunnablePassthrough.assign(context=itemgetter("context"))
-
-
     | {"response": chat_prompt | chainlit_state.qa_model, "context": itemgetter("context")}
 )
 
@@ -95,25 +94,25 @@ async def main(message):
     # Send the response back to the user
     await msg.send()
 
-    context_documents = response["context"]
-    num_contexts = len(context_documents)
-    context_msg = f"Number of found context: {num_contexts}"
+    # context_documents = response["context"]
+    # num_contexts = len(context_documents)
+    # context_msg = f"Number of found context: {num_contexts}"
 
 
-    await cl.Message(content=context_msg).send()
+    # await cl.Message(content=context_msg).send()
 
-    for doc in context_documents:
-        document_title = doc.metadata.get("source", "Unknown Document") 
-        chunk_number = doc.metadata.get("chunk_number", "Unknown Chunk")  
+    # for doc in context_documents:
+    #     document_title = doc.metadata.get("source", "Unknown Document") 
+    #     chunk_number = doc.metadata.get("chunk_number", "Unknown Chunk")  
 
-        document_context = doc.page_content.strip() 
-        truncated_context = document_context[:MAX_PREVIEW_LENGTH] + ("..." if len(document_context) > MAX_PREVIEW_LENGTH else "")
-        print("----------------------------------------")
-        print(truncated_context)
+    #     document_context = doc.page_content.strip() 
+    #     truncated_context = document_context[:MAX_PREVIEW_LENGTH] + ("..." if len(document_context) > MAX_PREVIEW_LENGTH else "")
+    #     print("----------------------------------------")
+    #     print(truncated_context)
 
-        await cl.Message(
-            content=f"**{document_title} ( Chunk: {chunk_number})**",
-            elements=[
-                cl.Text(content=truncated_context, display="inline")  
-            ]
-        ).send()
+    #     await cl.Message(
+    #         content=f"**{document_title} ( Chunk: {chunk_number})**",
+    #         elements=[
+    #             cl.Text(content=truncated_context, display="inline")  
+    #         ]
+    #     ).send()
